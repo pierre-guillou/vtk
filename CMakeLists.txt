@@ -847,6 +847,24 @@ configure_file(
   "${VTK_BINARY_DIR}/.clang-tidy"
   COPYONLY)
 
+# CPack
+set(CPACK_PACKAGE_NAME "VTK")
+set(CPACK_PACKAGE_CONTACT "Pierre Guillou <pierre.guillo@minesparis.psl.eu>")
+set(CPACK_PACKAGE_VENDOR "Mines Paris PSL and contributors")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://vtk.org/")
+
+set(CPACK_PACKAGE_VERSION_MAJOR ${VTK_MAJOR_VERSION})
+set(CPACK_PACKAGE_VERSION_MINOR ${VTK_MINOR_VERSION})
+set(CPACK_PACKAGE_VERSION_PATCH ${VTK_BUILD_VERSION})
+# autogenerate dependency information
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+# deb package conflicts
+set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libvtk9-dev")
+# let the installer uninstall previous installations on Windows
+set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+
+include(CPack)
+
 #-----------------------------------------------------------------------------
 # Do this at the end so the all variables it uses are setup.
 include(vtkBuildPath)

@@ -1,0 +1,47 @@
+name: package-ubuntu
+
+on:
+  workflow_dispatch:
+
+env:
+  CMAKE_BUILD_TYPE : Release
+  CMAKE_GENERATOR: Ninja
+  SCCACHE_GHA_ENABLED: "true"
+  CMAKE_CC_COMPILER_LAUNCHER: sccache
+  CMAKE_CXX_COMPILER_LAUNCHER: sccache
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          activate-environment: true
+
+      - name: Install dependencies with uv
+        run: |
+          uv pip install ninja cmake
+
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.9
+
+      - name: Create & configure build directory
+        run: |
+          mkdir build && cd build
+          uv run cmake \
+            -DVTK_USE_X=OFF \
+            ..
+
+      - name: Build package
+        run: |
+          cd build
+          cmake --build .
+          cpack -G DEB
+
+      - name: Upload package as artifact
+        uses: actions/upload-artifact@v6
+        with:
+          path: build/*.deb
