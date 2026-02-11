@@ -9,15 +9,15 @@ jobs:
     steps:
       - name: Install build deps
         run: |
-          apt build-dep libvtk9-qt-dev
+          sudo apt build-dep libvtk9-qt-dev
 
       - name: Install sources
         run: |
-          apt source libvtk9-qt-dev
+          sudo apt source libvtk9-qt-dev
 
       - name: Build
         run: |
-          apt -b source libvtk9-qt-dev
+          sudo apt -b source libvtk9-qt-dev
 
       - name: Upload package as artifact
         uses: actions/upload-artifact@v6
